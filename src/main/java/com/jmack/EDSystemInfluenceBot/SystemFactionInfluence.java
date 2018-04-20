@@ -160,7 +160,7 @@ public class SystemFactionInfluence {
 		JsonObject jsonData = getJsonObject(response);
 		
 		if (jsonData.get("total").getAsInt() == 0) {
-			appendix = String.format("No data found for %s%n", system);
+			appendix = String.format("No data found for ```%s", system);
 			sb.append(appendix);
 			return new JsonArray();
 		}
