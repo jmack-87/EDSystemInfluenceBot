@@ -28,7 +28,7 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 public class TriggerListener extends ListenerAdapter {
 	
-	private static String token = "NDM2NjQ1MjI2NDIyMDc1NDAw.DbqiPg.QYlqoSFLy8_nSkGkvkvHJRivrSk";
+	private static String token = "<user token>";
 
     /**
      * This is the method where the program starts.

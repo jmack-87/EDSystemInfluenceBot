@@ -3,3 +3,4 @@ target/*SNAPSHOT.jar
 target/*dependencies.jar
 **/maven-archiver
 discord.txt
+/target/
