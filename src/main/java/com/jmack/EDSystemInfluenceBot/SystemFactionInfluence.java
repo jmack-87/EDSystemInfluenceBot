@@ -68,6 +68,10 @@ public class SystemFactionInfluence {
 		// pass /systems API url and system, return response (JSON)
 		HttpResponse response = getResponse(systemsUrl, system);
 		
+		if (response.getStatusLine().getStatusCode() != 200) {
+			return "```Data system currently unavailable.```";
+		}
+		
 		// parse response for faction objects (JSON)
 		JsonArray factionArray = getFactions(response);
 		
@@ -88,12 +92,6 @@ public class SystemFactionInfluence {
 				"----------------------------------------------------");
 		sb.append(appendix);
 
-		// print table headers
-//		System.out.printf("%-20.30s %-40.40s %-24.24s %-10.10s %-8.8s%n",
-//				"System","Faction", "Updated", "Influence", "State");
-//		System.out.println("------------------------------------------------"+
-//				"----------------------------------------------------------");
-		
 		// for each faction object (JSON), get influence
 		Iterator<JsonElement> factions = factionArray.iterator();
 		while (factions.hasNext()) {
@@ -101,15 +99,20 @@ public class SystemFactionInfluence {
 			factionName = faction.get("name_lower").getAsString();
 			// pass /factions API url and faction, return response (JSON)
 			response = getResponse(factionsUrl, factionName);
-			// print formatted faction details
 			
-//			System.out.print(getFactionInfluence(response));
+			if (response.getStatusLine().getStatusCode() != 200) {
+				appendix = String.format("%s```", "Data system unavailable.");
+				sb.append(appendix);
+				return sb.toString();
+			}
+			
+			// print formatted faction details
 			appendix = getFactionInfluence(response);
 			sb.append(appendix);
 			
 		}
 		
-		appendix = String.format("%s%n", "```");
+		appendix = String.format("%s", "```");
 		sb.append(appendix);
 		return sb.toString();
 	}
