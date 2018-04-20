@@ -57,9 +57,9 @@ public class SystemFactionInfluence {
 //			system = args[0].toLowerCase();
 //		}
 		
-		if (StringUtils.countMatches(sys, "<") > 1) {
-			return "One system only, please. Ex: !influence:<eotienses>";
-		}
+//		if (StringUtils.countMatches(sys, "<") > 1) {
+//			return "One system only, please. Ex: !influence:<eotienses>";
+//		}
 		
 		
 		
@@ -160,7 +160,7 @@ public class SystemFactionInfluence {
 		JsonObject jsonData = getJsonObject(response);
 		
 		if (jsonData.get("total").getAsInt() == 0) {
-			appendix = String.format("No data found for ```%s", system);
+			appendix = String.format("```No data for %s", system);
 			sb.append(appendix);
 			return new JsonArray();
 		}
