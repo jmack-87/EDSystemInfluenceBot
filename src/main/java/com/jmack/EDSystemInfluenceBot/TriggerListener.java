@@ -172,7 +172,7 @@ public class TriggerListener extends ListenerAdapter {
         else if (msg.toLowerCase().startsWith("mate.me.influence ")) {
         	//if (msg.contains("<") && msg.contains(">")) {
         		//String system = msg.substring(msg.indexOf("<")+1, msg.indexOf(">"));
-        	if (msg.length() > 15) {
+        	if (msg.length() > 18) {
         		String system = msg.substring(msg.indexOf(" ")+1).trim();
         		
         		try {
@@ -182,15 +182,13 @@ public class TriggerListener extends ListenerAdapter {
     			};
     			
         	} else {
-        		channel.sendMessage(author.getAsMention() + " ```Incorrect format. Use: '!influence:<system name>'```").queue();;
+        		channel.sendMessage(author.getAsMention() + " ```Incorrect format. Use: '!influence:<system name>'```").queue();
         	}	
         }
         else if (msg.toLowerCase().startsWith("mate.influence ")) {
         	//if (msg.contains("<") && msg.contains(">")) {
         		//String system = msg.substring(msg.indexOf("<")+1, msg.indexOf(">"));
-        	System.out.println("true");
         	if (msg.length() > 15) {
-        		System.out.println("true");
         		String system = msg.substring(msg.indexOf(" ")+1).trim();
         		
         		try {
@@ -200,7 +198,7 @@ public class TriggerListener extends ListenerAdapter {
     			};
     			
         	} else {
-        		channel.sendMessage(author.getAsMention() + " ```Incorrect format. Use: '!influence:<system name>'```").queue();;
+        		channel.sendMessage(author.getAsMention() + " ```Incorrect format. Use: '!influence:<system name>'```").queue();
         	}	
         }
         
