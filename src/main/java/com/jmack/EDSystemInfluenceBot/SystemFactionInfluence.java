@@ -63,6 +63,13 @@ public class SystemFactionInfluence {
 			return "One system only, please. Ex: !influence:<eotienses>";
 		}
 		
+		
+		
+		system = sys.trim().toLowerCase();
+		
+		// pass /systems API url and system, return response (JSON)
+		HttpResponse response = getResponse(systemsUrl, system);
+		
 		appendix = String.format("%s%n", "```");
 		sb.append(appendix);
 		appendix = String.format("%-20.30s %-40.40s %-24.24s %-10.10s %-8.8s%n",
@@ -72,10 +79,6 @@ public class SystemFactionInfluence {
 				"----------------------------------------------------");
 		sb.append(appendix);
 		
-		system = sys.trim().toLowerCase();
-		
-		// pass /systems API url and system, return response (JSON)
-		HttpResponse response = getResponse(systemsUrl, system);
 		// parse response for faction objects (JSON)
 		JsonArray factionArray = getFactions(response);
 		
@@ -153,6 +156,9 @@ public class SystemFactionInfluence {
 		JsonArray factionArray = jsonData.getAsJsonArray("docs");
 		JsonObject ob = factionArray.get(0).getAsJsonObject();
 		factionArray = ob.get("factions").getAsJsonArray();
+		String sysUpdate = ob.get("updated_at").getAsString().replace("T"," ").replace(".000Z", "");;
+		appendix = String.format("%s updated at: %s%n", system, sysUpdate);
+		sb.append(appendix);
 		
 		//System.out.format("[DEBUG]: <json %s>%n", factionArray);
 		
