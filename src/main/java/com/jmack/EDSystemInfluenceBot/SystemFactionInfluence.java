@@ -40,9 +40,7 @@ public class SystemFactionInfluence {
 	private static StringBuilder sb = new StringBuilder();
 	private static String appendix = "";
 	
-	public static String argument(String sys) {
-		return sys.toLowerCase();
-	}
+
 	/**
 	 * Given a system name, uses /systems API to get (most) current Faction list, then calls /factions API
 	 * to retrieve faction influence level per given system
@@ -72,6 +70,12 @@ public class SystemFactionInfluence {
 		
 		// parse response for faction objects (JSON)
 		JsonArray factionArray = getFactions(response);
+		
+		if (factionArray.size() == 0) {
+			appendix = String.format("%s%n", "```");
+			sb.append(appendix);
+			return sb.toString();
+		}
 		
 		appendix = String.format("%s%n", "```");
 		sb.append(appendix);
@@ -154,6 +158,12 @@ public class SystemFactionInfluence {
 	private static JsonArray getFactions(HttpResponse response) throws UnsupportedOperationException, IOException {
 		
 		JsonObject jsonData = getJsonObject(response);
+		
+		if (jsonData.get("total").getAsInt() == 0) {
+			appendix = String.format("No data found for %s%n", system);
+			sb.append(appendix);
+			return new JsonArray();
+		}
 		
 		JsonArray factionArray = jsonData.getAsJsonArray("docs");
 		JsonObject ob = factionArray.get(0).getAsJsonObject();
