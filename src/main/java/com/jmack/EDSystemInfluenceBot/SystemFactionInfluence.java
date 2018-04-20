@@ -70,18 +70,20 @@ public class SystemFactionInfluence {
 		// pass /systems API url and system, return response (JSON)
 		HttpResponse response = getResponse(systemsUrl, system);
 		
-		appendix = String.format("%s%n", "```");
-		sb.append(appendix);
-		appendix = String.format("%-20.30s %-40.40s %-24.24s %-10.10s %-8.8s%n",
-				"System","Faction", "Updated", "Influence", "State");
-		sb.append(appendix);
-		appendix = String.format("%s%s%n", "------------------------------------------------------",
-				"----------------------------------------------------");
-		sb.append(appendix);
-		
 		// parse response for faction objects (JSON)
 		JsonArray factionArray = getFactions(response);
 		
+		appendix = String.format("%s%n", "```");
+		sb.append(appendix);
+		
+		appendix = String.format("%-20.30s %-40.40s %-24.24s %-10.10s %-8.8s%n",
+				"System","Faction", "Updated", "Influence", "State");
+		sb.append(appendix);
+		
+		appendix = String.format("%s%s%n", "------------------------------------------------------",
+				"----------------------------------------------------");
+		sb.append(appendix);
+
 		// print table headers
 //		System.out.printf("%-20.30s %-40.40s %-24.24s %-10.10s %-8.8s%n",
 //				"System","Faction", "Updated", "Influence", "State");
@@ -156,7 +158,8 @@ public class SystemFactionInfluence {
 		JsonArray factionArray = jsonData.getAsJsonArray("docs");
 		JsonObject ob = factionArray.get(0).getAsJsonObject();
 		factionArray = ob.get("factions").getAsJsonArray();
-		String sysUpdate = ob.get("updated_at").getAsString().replace("T"," ").replace(".000Z", "");;
+		String sysUpdate = ob.get("updated_at").getAsString().replace("T"," ").replace(".000Z", "");
+		
 		appendix = String.format("%s updated at: %s%n", system, sysUpdate);
 		sb.append(appendix);
 		
