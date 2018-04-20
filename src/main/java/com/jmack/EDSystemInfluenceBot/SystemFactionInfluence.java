@@ -219,4 +219,11 @@ public class SystemFactionInfluence {
 	}
 	
 	
+	public static void clearMessage() {
+		sb = null;
+		sb = new StringBuilder();
+		
+	}
+	
+	
 }

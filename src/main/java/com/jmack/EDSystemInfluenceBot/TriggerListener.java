@@ -169,22 +169,7 @@ public class TriggerListener extends ListenerAdapter {
             });
         }
         
-        else if (msg.toLowerCase().startsWith("mate.me.influence ")) {
-        	//if (msg.contains("<") && msg.contains(">")) {
-        		//String system = msg.substring(msg.indexOf("<")+1, msg.indexOf(">"));
-        	if (msg.length() > 18) {
-        		String system = msg.substring(msg.indexOf(" ")+1).trim();
-        		
-        		try {
-    				channel.sendMessage(author.getAsMention() + SystemFactionInfluence.main(system)).queue();
-    			} catch (IOException e) {
-    				e.printStackTrace();
-    			};
-    			
-        	} else {
-        		channel.sendMessage(author.getAsMention() + " ```Incorrect format. Use: '!influence:<system name>'```").queue();
-        	}	
-        }
+
         else if (msg.toLowerCase().startsWith("mate.influence ")) {
         	//if (msg.contains("<") && msg.contains(">")) {
         		//String system = msg.substring(msg.indexOf("<")+1, msg.indexOf(">"));
@@ -193,13 +178,15 @@ public class TriggerListener extends ListenerAdapter {
         		
         		try {
     				channel.sendMessage(SystemFactionInfluence.main(system)).queue();
+    				
     			} catch (IOException e) {
     				e.printStackTrace();
     			};
     			
         	} else {
         		channel.sendMessage(author.getAsMention() + " ```Incorrect format. Use: '!influence:<system name>'```").queue();
-        	}	
+        	}
+        	SystemFactionInfluence.clearMessage();
         }
         
         else if (msg.startsWith("!kick"))   //Note, I used "startsWith, not equals.
