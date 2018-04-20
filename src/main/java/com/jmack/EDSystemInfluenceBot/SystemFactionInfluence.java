@@ -72,7 +72,7 @@ public class SystemFactionInfluence {
 		JsonArray factionArray = getFactions(response);
 		
 		if (factionArray.size() == 0) {
-			appendix = String.format("%s%n", "```");
+			appendix = String.format("%s", "```");
 			sb.append(appendix);
 			return sb.toString();
 		}

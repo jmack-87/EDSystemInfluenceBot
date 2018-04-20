@@ -1,3 +1,4 @@
-*.class
-*SNAPSHOT-jar*
-*pom.properties
+**/classes/**
+target/*SNAPSHOT.jar
+target/*dependencies.jar
+**/maven-archiver
