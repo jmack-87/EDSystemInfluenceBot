@@ -1,24 +1,23 @@
 package com.jmack.EDSystemInfluenceBot;
 
-import java.io.BufferedReader;
+//import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.omg.CORBA.Environment;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.Gson;
+
+import net.dv8tion.jda.core.EmbedBuilder;
+
 
 /**
  * 
@@ -28,19 +27,16 @@ import com.google.gson.JsonParser;
 public class SystemFactionInfluence {
 	
 	
-	private static String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)"
-			+" Chrome/65.0.3325.181 Safari/537.36";
+	private static String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+			+" AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36";
 	private static String system = "eotienses";
 	private static String systemsUrl = "https://elitebgs.kodeblox.com/api/ebgs/v4/systems?name=";
 	private static String factionsUrl = "https://elitebgs.kodeblox.com/api/ebgs/v4/factions?name=";
 	
-	private static JsonParser jsonParser = new JsonParser();
-	private static String factionName = "";
 	
-	private static StringBuilder sb = new StringBuilder();
-	private static String appendix = "";
+	private static EmbedBuilder eb = new EmbedBuilder();
 	
-
+	
 	/**
 	 * Given a system name, uses /systems API to get (most) current Faction list, then calls /factions API
 	 * to retrieve faction influence level per given system
@@ -49,136 +45,70 @@ public class SystemFactionInfluence {
 	 * @throws ClientProtocolException
 	 * @throws IOException
 	 */
-	public static String main(String sys) throws ClientProtocolException, IOException {
+	public static EmbedBuilder main(String sys) throws ClientProtocolException, IOException {
 
-		
-		// if system is provided as argument, set target system to argument
-//		if (args.length != 0) {
-//			system = args[0].toLowerCase();
-//		}
-		
-//		if (StringUtils.countMatches(sys, "<") > 1) {
-//			return "One system only, please. Ex: !influence:<eotienses>";
-//		}
-		
-		
+		Gson gson = new Gson();
+		StringBuilder sb = new StringBuilder();
+		String appendix = null;
+		EDSystemDoc sysDoc = null;
+		ArrayList<EDFaction> factionArray = new ArrayList<EDFaction>();
+		EDSystem systemObject = null;
+		HttpResponse response = null;
+		EDSystemFaction faction = null;
+		EDFactionDoc factionDoc = null;
+		ArrayList<EDFactionDoc> factionDocsArray = new ArrayList<EDFactionDoc>();
 		
 		system = sys.trim().toLowerCase();
 		
+		
 		// pass /systems API url and system, return response (JSON)
-		HttpResponse response = getResponse(systemsUrl, system);
+		response = getResponse(systemsUrl, system);
 		
 		if (response.getStatusLine().getStatusCode() != 200) {
-			return "```Data system currently unavailable.```";
-		}
-		
-		// parse response for faction objects (JSON)
-		JsonArray factionArray = getFactions(response);
-		
-		if (factionArray.size() == 0) {
-			appendix = String.format("%s", "```");
+			appendix = String.format("```[%s] data unavailable. Try again later.```", system);
 			sb.append(appendix);
-			return sb.toString();
+			//return sb.toString();
 		}
 		
-		appendix = String.format("%s%n", "```");
-		sb.append(appendix);
 		
-		appendix = String.format("%-20.30s %-40.40s %-24.24s %-10.10s %-8.8s%n",
-				"System","Faction", "Updated", "Influence", "State");
-		sb.append(appendix);
+		systemObject = gson.fromJson(new InputStreamReader(response.getEntity().getContent()), EDSystem.class);
 		
-		appendix = String.format("%s%s%n", "------------------------------------------------------",
-				"----------------------------------------------------");
-		sb.append(appendix);
-
-		// for each faction object (JSON), get influence
-		Iterator<JsonElement> factions = factionArray.iterator();
-		while (factions.hasNext()) {
-			JsonObject faction = (JsonObject) factions.next();
-			factionName = faction.get("name_lower").getAsString();
-			// pass /factions API url and faction, return response (JSON)
-			response = getResponse(factionsUrl, factionName);
+		Iterator<EDSystemDoc> sysDocsIterator = systemObject.docs.iterator(); // should only ever be 1
+		while (sysDocsIterator.hasNext()) {
 			
-			if (response.getStatusLine().getStatusCode() != 200) {
-				appendix = String.format("%s```", "Data system unavailable.");
-				sb.append(appendix);
-				return sb.toString();
-			}
+			sysDoc = sysDocsIterator.next();
 			
-			// print formatted faction details
-			appendix = getFactionInfluence(response);
-			sb.append(appendix);
+			eb = sysDoc.toDiscordMessage(eb);
 			
-		}
-		
-		appendix = String.format("%s", "```");
-		sb.append(appendix);
-		return sb.toString();
-	}
-	
-	/**
-	 * Given a (JSON) http response from /factions API call, parse for influence and timestamp
-	 * 
-	 * @param response HTTP response as received from API calls
-	 * @return String (formatted) faction details
-	 * @throws UnsupportedOperationException
-	 * @throws IOException
-	 */
-	private static String getFactionInfluence(HttpResponse response) throws UnsupportedOperationException, IOException {
-		
-		JsonObject faction;
-		
-		JsonObject jsonData = getJsonObject(response);
-		JsonArray factionArray = jsonData.getAsJsonArray("docs");
-		JsonObject ob = factionArray.get(0).getAsJsonObject();
-		factionArray = ob.get("faction_presence").getAsJsonArray();
-		// trim timestamp of superfluous characters
-		String updated = ob.get("updated_at").getAsString().replace("T"," ").replace(".000Z", "");
-		
-		Iterator<JsonElement> factions = factionArray.iterator();
-		while (factions.hasNext()) {
-			faction = (JsonObject) factions.next();
-			if (faction.get("system_name_lower").getAsString().equals(system)) {
-				Float factionInfluence = faction.get("influence").getAsFloat();
-				String state = faction.get("state").getAsString();
-				return String.format("%-20.30s %-40.40s %-24.24s %-10.3f %-10.10s%n",
-						system, factionName, updated, factionInfluence, state);
+			Iterator<EDSystemFaction> sysFactions = sysDoc.factions.iterator();
+			while (sysFactions.hasNext()) {
+				
+				faction = sysFactions.next();
+				response = getResponse(factionsUrl, faction.name_lower);
+				
+				if (response.getStatusLine().getStatusCode() != 200) {
+					appendix = String.format("```[%s] data unavailable. Try again later.```", faction.name_lower);
+					sb.append(appendix);
+				}
+				
+				factionArray.add(gson.fromJson(new InputStreamReader(response.getEntity().getContent()), EDFaction.class));
 			}
 		}
-		return null; // if faction is not found, null
-	}
-	
-	
-	/**
-	 * Given a (JSON) http response from /systems API call, parse for factions
-	 * 
-	 * @param response HTTP response as received from API calls
-	 * @return JsonArray array for faction objects
-	 * @throws UnsupportedOperationException
-	 * @throws IOException
-	 */
-	private static JsonArray getFactions(HttpResponse response) throws UnsupportedOperationException, IOException {
 		
-		JsonObject jsonData = getJsonObject(response);
-		
-		if (jsonData.get("total").getAsInt() == 0) {
-			appendix = String.format("```No data for %s", system);
-			sb.append(appendix);
-			return new JsonArray();
+		Iterator<EDFaction> factions = factionArray.iterator();
+		while (factions.hasNext()) {
+			factionDocsArray = factions.next().docs;
+			
+			Iterator<EDFactionDoc> factionDocs = factionDocsArray.iterator();
+			while (factionDocs.hasNext()) { // should only be one (1) docs per faction
+				factionDoc = factionDocs.next();
+				
+				eb = factionDoc.toDiscordMessage(eb, system);
+				
+			}
 		}
 		
-		JsonArray factionArray = jsonData.getAsJsonArray("docs");
-		JsonObject ob = factionArray.get(0).getAsJsonObject();
-		factionArray = ob.get("factions").getAsJsonArray();
-		String sysUpdate = ob.get("updated_at").getAsString().replace("T"," ").replace(".000Z", "");
-		
-		appendix = String.format("%s updated at: %s%n", system, sysUpdate);
-		sb.append(appendix);
-		
-		//System.out.format("[DEBUG]: <json %s>%n", factionArray);
-		
-		return factionArray;
+		return eb;
 	}
 	
 	
@@ -208,34 +138,12 @@ public class SystemFactionInfluence {
 
 		return client.execute(request);	
 	}
-
 	
 	/**
-	 * Given an (JSON) HttpResponse, parse into JsonObject
-	 * 
-	 * @param response HttpResponse from API call
-	 * @return JsonObject parsed from HttpResponse
-	 * @throws UnsupportedOperationException
-	 * @throws IOException
+	 * Clear the message buffer
 	 */
-	private static JsonObject getJsonObject(HttpResponse response) throws UnsupportedOperationException, IOException {
-
-		BufferedReader rd = new BufferedReader(
-			new InputStreamReader(response.getEntity().getContent()));
-	
-		StringBuffer result = new StringBuffer();
-		String line = "";
-		while ((line = rd.readLine()) != null) {
-			result.append(line);
-		}
-		return jsonParser.parse(result.toString()).getAsJsonObject();
-	}
-	
-	
-	public static void clearMessage() {
-		sb = null;
-		sb = new StringBuilder();
-		
+	public static void purgeEmbed() {
+		eb = new EmbedBuilder();
 	}
 	
 	
