@@ -31,9 +31,10 @@ public class EDFactionDoc {
 			if (presence.system_name_lower.equals(system)) {
 
 				eb.addField(String.format("%5.2f%%%n", presence.influence*100),				//influence [Title]
-						String.format("**[%-28.28s](%s%d)**%n@%s%n*Government:* **%s**%n*State:* **%s**%n*Pending:* %s%n*Recovering:* %s%n-\t-\t-",						
+						String.format("**[%-28.28s](%s%d)**%n@%s[%s]%n*Government:* **%s**%n*State:* **%s**%n*Pending:* %s%n*Recovering:* %s%n-\t-\t-",						
 								name, eddb, eddb_id,										//link [Value]
 								updated_at.replace("T", " ").replaceAll(".000Z", ""),		//updated [Value]
+								DateCompare.compareDate(updated_at),						//vsTick
 								StringUtils.capitalize(government),							//gonvmt [Value]
 								StringUtils.capitalize(presence.state),						//state [Value]
 								presence.getPendingStates(),								//pending [Value(s)]

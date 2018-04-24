@@ -33,12 +33,14 @@ public class EDSystemDoc {
 	
 		eb.setColor(new Color(15, 27, 147));
 		eb.setTitle(":sunny:"+name, eddb+eddb_id);
-		eb.setDescription(String.format("@%s", updated_at.replace("T", " ").replace(".000Z","")));
+		eb.setDescription(String.format("@%s[%s]", updated_at.replace("T", " ").replace(".000Z",""), DateCompare.compareDate(updated_at)));
 		eb.setTimestamp(Instant.now());
 		eb.setFooter("@incizhi0n#8241", "https://cdn.discordapp.com/avatars/412001635259383820/35e38943ed2766595219fa6753e36b4f.png?size=32");
 
 		return eb;
 	}
+	
+	
 	
 
 }
