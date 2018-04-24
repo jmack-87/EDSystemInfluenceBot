@@ -69,12 +69,12 @@ public class EDFactionPresence {
 			EDFactionPendingState pendState = pendingStates.next();
 			
 			switch (pendState.trend) {
-			case 1: trendReplace = "+";
-				break;
-			case 0: trendReplace = "0";
-				break;
-			case -1: trendReplace = "-";
-				break;
+				case 1: trendReplace = "+";
+					break;
+				case 0: trendReplace = "0";
+					break;
+				case -1: trendReplace = "-";
+					break;
 			}
 			s.append(String.format("**%s**[%s] ", StringUtils.capitalize(pendState.state), trendReplace));
 		}
