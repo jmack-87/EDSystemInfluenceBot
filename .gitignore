@@ -2,5 +2,6 @@
 target/*SNAPSHOT.jar
 target/*dependencies.jar
 **/maven-archiver
-**/maven-status
+/maven-status/
 discord.txt
+/target/
