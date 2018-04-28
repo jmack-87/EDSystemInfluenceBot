@@ -67,7 +67,8 @@ public class SystemFactionInfluence {
 		if (response.getStatusLine().getStatusCode() != 200) {
 			appendix = String.format("```[%s] data unavailable. Try again later.```", system);
 			sb.append(appendix);
-			//return sb.toString();
+			eb.setTitle("Error: "+sb.toString());
+			return eb;
 		}
 		
 		
@@ -89,6 +90,8 @@ public class SystemFactionInfluence {
 				if (response.getStatusLine().getStatusCode() != 200) {
 					appendix = String.format("```[%s] data unavailable. Try again later.```", faction.name_lower);
 					sb.append(appendix);
+					eb.addField("Error: ", sb.toString(), false);
+					return eb;
 				}
 				
 				factionArray.add(gson.fromJson(new InputStreamReader(response.getEntity().getContent()), EDFaction.class));
