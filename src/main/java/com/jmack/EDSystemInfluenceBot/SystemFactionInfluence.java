@@ -106,7 +106,7 @@ public class SystemFactionInfluence {
 			while (factionDocs.hasNext()) { // should only be one (1) docs per faction
 				factionDoc = factionDocs.next();
 				
-				eb = factionDoc.toDiscordMessage(eb, system);
+				eb = factionDoc.toDiscordMessage(eb, system, sysDoc.controlling_minor_faction);
 				
 			}
 		}
@@ -116,7 +116,7 @@ public class SystemFactionInfluence {
 	
 	
 	/**
-	 * Given an PAI endpoint url and corresponding query parameter, make the API call
+	 * Given an API endpoint url and corresponding query parameter, make the API call
 	 * 
 	 * @param url String API endpoint URL
 	 * @param param	String parameter for API query

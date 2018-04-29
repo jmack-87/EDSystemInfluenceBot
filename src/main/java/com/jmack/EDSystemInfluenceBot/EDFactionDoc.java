@@ -22,24 +22,44 @@ public class EDFactionDoc {
 	private static final String eddb = "http://eddb.io/faction/";
 	
 
-	public EmbedBuilder toDiscordMessage(EmbedBuilder eb, String system) {
+	public EmbedBuilder toDiscordMessage(EmbedBuilder eb, String system, String controlling_minor_faction) {
 		
 		Iterator<EDFactionPresence> factionPresences = faction_presence.iterator();
 		while (factionPresences.hasNext()) {
 			EDFactionPresence presence = factionPresences.next();
 			
 			if (presence.system_name_lower.equals(system)) {
-
-				eb.addField(String.format("%5.2f%%%n", presence.influence*100),				//influence [Title]
-						String.format("**[%-28.28s](%s%d)**%n@%s[%s]%n*Government:* **%s**%n*State:* **%s**%n*Pending:* %s%n*Recovering:* %s%n-\t-\t-",						
-								name, eddb, eddb_id,										//link [Value]
-								updated_at.replace("T", " ").replaceAll(".000Z", ""),		//updated [Value]
-								DateCompare.compareDate(updated_at),						//vsTick
-								StringUtils.capitalize(government),							//gonvmt [Value]
-								StringUtils.capitalize(presence.state),						//state [Value]
-								presence.getPendingStates(),								//pending [Value(s)]
-								presence.getRecoveringStates()),							//recovering [Value(s)]
-						true);
+				
+								
+				if (name_lower.equals(controlling_minor_faction)) {
+					
+					
+					eb.addField(String.format("%5.2f%%%n", presence.influence*100),				//influence [Title]
+							String.format("**[C] [%-28.28s](%s%d)**%n@%s[%s]%n*Government:* **%s**%n*State:* **%s**%n*Pending:* %s%n*Recovering:* %s%n-\t-\t-",						
+									name, eddb, eddb_id,										//link [Value]
+									updated_at.replace("T", " ").replaceAll(".000Z", ""),		//updated [Value]
+									DateCompare.compareDate(updated_at),						//vsTick
+									StringUtils.capitalize(government),							//gonvmt [Value]
+									StringUtils.capitalize(presence.state),						//state [Value]
+									presence.getPendingStates(),								//pending [Value(s)]
+									presence.getRecoveringStates()),							//recovering [Value(s)]
+							true);
+					
+				} else {
+					
+					eb.addField(String.format("%5.2f%%%n", presence.influence*100),				//influence [Title]
+							String.format("**[%-28.28s](%s%d)**%n@%s[%s]%n*Government:* **%s**%n*State:* **%s**%n*Pending:* %s%n*Recovering:* %s%n-\t-\t-",						
+									name, eddb, eddb_id,										//link [Value]
+									updated_at.replace("T", " ").replaceAll(".000Z", ""),		//updated [Value]
+									DateCompare.compareDate(updated_at),						//vsTick
+									StringUtils.capitalize(government),							//gonvmt [Value]
+									StringUtils.capitalize(presence.state),						//state [Value]
+									presence.getPendingStates(),								//pending [Value(s)]
+									presence.getRecoveringStates()),							//recovering [Value(s)]
+							true);
+					
+				}
+				
 			}
 				
 		}
