@@ -187,7 +187,7 @@ public class TriggerListener extends ListenerAdapter {
     			};
     			
         	} else {
-        		channel.sendMessage(author.getAsMention() + " ```Incorrect format. Use: '!influence:<system name>'```").queue();
+        		channel.sendMessage(author.getAsMention() + " ```Incorrect format. Use: 'mate.influence <system name>'```").queue();
         	}
         	SystemFactionInfluence.purgeEmbed();
         }
