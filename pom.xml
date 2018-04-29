@@ -12,7 +12,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<refDir>C:\Users\inciz\eclipse-workspace\EDSystemInfluenceBot</refDir>
+		<refDir>C:\Dev\eclipse_workspaces\EDSystemInfluenceBot</refDir>
 	</properties>
 
 	<repositories>
