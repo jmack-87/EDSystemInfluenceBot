@@ -8,7 +8,6 @@ public class DateCompare {
 
 	private static Date dateTime1;
 	private static Date dateTime2;
-	private static Date today = new Date();
 	private static String dateComp;
 	private static final String tick = "T12:45:00.000Z";
 	
@@ -23,7 +22,7 @@ public class DateCompare {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss'Z'");
 		SimpleDateFormat todayFormat = new SimpleDateFormat("yyyy-MM-dd");
 		
-		String todayDate = todayFormat.format(today);
+		String todayDate = todayFormat.format(new Date());
 		todayDate = todayDate+tick;
 		
 		try {
