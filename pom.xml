@@ -12,7 +12,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<refDir>C:\Dev\Eclipse_workspaces\Discord\EDSystemInfluenceBot</refDir>
+		<refDir>C:\Dev\eclipse_workspaces\EDSystemInfluenceBot</refDir>
 	</properties>
 
 	<repositories>
@@ -65,7 +65,7 @@
 		</testResources>
 
 		<directory>${refDir}\target</directory>
-		<finalName>EDSystemInfluenceBot-0.0.1-SNAPSHOT</finalName>
+		<finalName>EDSystemInfluenceBot</finalName>
 
 		<pluginManagement>
 			<plugins>

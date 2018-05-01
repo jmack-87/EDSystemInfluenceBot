@@ -20,18 +20,27 @@ public class EDFactionDoc {
 	protected ArrayList<EDFactionPresence> faction_presence;
 		
 	private static final String eddb = "http://eddb.io/faction/";
+	private static String format = "";
 	
 
-	public EmbedBuilder toDiscordMessage(EmbedBuilder eb, String system) {
+	public EmbedBuilder toDiscordMessage(EmbedBuilder eb, String system, String controlling_minor_faction) {
 		
 		Iterator<EDFactionPresence> factionPresences = faction_presence.iterator();
 		while (factionPresences.hasNext()) {
 			EDFactionPresence presence = factionPresences.next();
 			
 			if (presence.system_name_lower.equals(system)) {
-
+				
+								
+				if (name_lower.equals(controlling_minor_faction)) {
+					format = "**[C] [%-28.28s](%s%d)**%n@%s[%s]%n*Government:* **%s**%n*State:* **%s**%n*Pending:* %s%n*Recovering:* %s%n-\t-\t-";
+				} else {
+					format = "**[%-28.28s](%s%d)**%n@%s[%s]%n*Government:* **%s**%n*State:* **%s**%n*Pending:* %s%n*Recovering:* %s%n-\t-\t-";
+				}
+					
+					
 				eb.addField(String.format("%5.2f%%%n", presence.influence*100),				//influence [Title]
-						String.format("**[%-28.28s](%s%d)**%n@%s[%s]%n*Government:* **%s**%n*State:* **%s**%n*Pending:* %s%n*Recovering:* %s%n-\t-\t-",						
+						String.format(format,						
 								name, eddb, eddb_id,										//link [Value]
 								updated_at.replace("T", " ").replaceAll(".000Z", ""),		//updated [Value]
 								DateCompare.compareDate(updated_at),						//vsTick
@@ -40,6 +49,7 @@ public class EDFactionDoc {
 								presence.getPendingStates(),								//pending [Value(s)]
 								presence.getRecoveringStates()),							//recovering [Value(s)]
 						true);
+				
 			}
 				
 		}
