@@ -10,7 +10,7 @@ public class DateCompare {
 	private static Date dateTime2;
 	private static Date today = new Date();
 	private static String dateComp;
-	private static final String tick = "T12:45:00.000Z";
+	private static final String tick = "T16:30:00.000Z";
 	
 	
 	/**
