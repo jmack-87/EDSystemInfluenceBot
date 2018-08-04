@@ -26,7 +26,7 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 public class TriggerListener extends ListenerAdapter {
 	
-	private static String token = ""; //don't push to GitHub with actual token!!!
+	private static String token = "NDM2NjQ1MjI2NDIyMDc1NDAw.DcZ5bA.F0gRoR6uT5YKrG-jbneJOUnC5-s"; //don't push to GitHub with actual token!!!
 
     /**
      * This is the method where the program starts.
