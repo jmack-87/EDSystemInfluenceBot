@@ -6,8 +6,6 @@ import java.io.IOException;
 
 import javax.security.auth.login.LoginException;
 
-import com.jmack.EDSystemInfluenceBot.SystemFactionInfluence;
-
 import net.dv8tion.jda.client.entities.Group;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
