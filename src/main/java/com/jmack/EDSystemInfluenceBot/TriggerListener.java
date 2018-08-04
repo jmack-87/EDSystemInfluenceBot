@@ -38,10 +38,10 @@ public class TriggerListener extends ListenerAdapter {
         // we would use AccountType.CLIENT
         try
         {
-            JDA jda = new JDABuilder(AccountType.BOT)
+			JDA jda = new JDABuilder(AccountType.BOT)
                     .setToken(token)           //The token of the account that is logging in.
                     .addEventListener(new TriggerListener())  //An instance of a class that will handle events.
-                    .buildBlocking();  //There are 2 ways to login, blocking vs async. Blocking guarantees that JDA will be completely loaded.
+                    .build().awaitReady();  //There are 2 ways to login, blocking vs async. Blocking guarantees that JDA will be completely loaded.
         }
         catch (LoginException e)
         {
