@@ -3,6 +3,8 @@ package com.jmack.EDSystemInfluenceBot;
 import java.io.IOException;
 //import java.util.List;
 //import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.security.auth.login.LoginException;
 
@@ -25,13 +27,12 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 public class TriggerListener extends ListenerAdapter {
-	
+
 	private static String token = ""; //don't push to GitHub with actual token!!!
 
     /**
      * This is the method where the program starts.
      */
-    @SuppressWarnings("unused")
 	public static void main(String[] args)
     {
         //We construct a builder for a BOT account. If we wanted to use a CLIENT account
@@ -74,7 +75,6 @@ public class TriggerListener extends ListenerAdapter {
      *          An event containing information about a {@link net.dv8tion.jda.core.entities.Message Message} that was
      *          sent in a channel.
      */
-    @SuppressWarnings("unused")
 	@Override
     public void onMessageReceived(MessageReceivedEvent event)
     {
@@ -113,7 +113,7 @@ public class TriggerListener extends ListenerAdapter {
             {
                 name = member.getEffectiveName();       //This will either use the Member's nickname if they have one,
             }                                           // otherwise it will default to their username. (User#getName())
-            	
+
 //            if (!name.equals("EDSystemInfluence")) {
 //            	System.out.printf("(%s)[%s]<%s>: %s\n", guild.getName(), textChannel.getName(), name, msg);
 //            }
@@ -168,28 +168,52 @@ public class TriggerListener extends ListenerAdapter {
 //                }
 //            });
 //        }
-        
+
 
 //        else if (msg.toLowerCase().startsWith("mate.influence ")) {
-        	if (msg.toLowerCase().startsWith("mate.influence ")) {
+        if (msg.toLowerCase().startsWith("mate.influence ")) {
         	//if (msg.contains("<") && msg.contains(">")) {
         		//String system = msg.substring(msg.indexOf("<")+1, msg.indexOf(">"));
         	if (msg.length() > 15) {
         		String system = msg.substring(msg.indexOf(" ")+1).trim();
-        		
+
         		try {
     				channel.sendMessage(SystemFactionInfluence.main(system).build()).queue();
-    				
+
     			} catch (IOException e) {
     				e.printStackTrace();
     			};
-    			
+
         	} else {
         		channel.sendMessage(author.getAsMention() + " ```Incorrect format. Use: 'mate.influence <system name>'```").queue();
         	}
         	SystemFactionInfluence.purgeEmbed();
         }
-        
+
+        if (msg.toLowerCase().startsWith("mate.setticktime ")) {
+
+        	if (msg.length() > 17) {
+
+        		String tick = msg.substring(msg.indexOf(" ")+1).trim();
+
+        		Pattern tickPattern = Pattern.compile("T/d{2}:/d{2}:/d{2}/./d{3}Z");
+        		Matcher properTickFormat = tickPattern.matcher(tick);
+
+        		if (!properTickFormat.matches()) {
+    				channel.sendMessage(author.getAsMention() + " ```Incorrect format. Use 24 time format (2-digit hour/minute/second, 3-digit millis). Example - 'T16:30:00.000Z'```").queue();
+        		} else {
+        			DateCompare.setTick(tick);
+        			channel.sendMessage(author.getAsMention() + String.format(" ```New tick: %s```", DateCompare.getTick())).queue();
+        		}
+
+
+        	} else {
+        		channel.sendMessage(author.getAsMention() + " ```Incorrect format. Use 24 time format (2-digit hour/minute/second, 3-digit millis). Example - 'T16:30:00.000Z'```").queue();
+        	}
+        	SystemFactionInfluence.purgeEmbed();
+        }
+
+
 //        else if (msg.startsWith("!kick"))   //Note, I used "startsWith, not equals.
 //        {
             //This is an admin command. That means that it requires specific permissions to use it, in this case
