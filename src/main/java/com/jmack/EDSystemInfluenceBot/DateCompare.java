@@ -2,7 +2,9 @@ package com.jmack.EDSystemInfluenceBot;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 public class DateCompare {
 
@@ -22,7 +24,11 @@ public class DateCompare {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss'Z'");
 		SimpleDateFormat todayFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-		String todayDate = todayFormat.format(new Date());
+		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/London"));
+		todayFormat.setCalendar(cal);
+		dateFormat.setCalendar(cal);
+
+		String todayDate = todayFormat.format(cal.getTime());
 		todayDate = todayDate+tick;
 
 		try {
