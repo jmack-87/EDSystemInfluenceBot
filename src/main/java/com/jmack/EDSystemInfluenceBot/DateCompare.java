@@ -63,4 +63,11 @@ public class DateCompare {
 
 	}
 
+
+	public static String getTick() {
+
+		return DateCompare.tick;
+
+	}
+
 }
