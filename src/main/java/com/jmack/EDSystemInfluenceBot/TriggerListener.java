@@ -196,7 +196,9 @@ public class TriggerListener extends ListenerAdapter {
 
         		String tick = msg.substring(msg.indexOf(" ")+1).trim();
 
-        		Pattern tickPattern = Pattern.compile("T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z");
+        		System.out.println(tick);
+
+        		Pattern tickPattern = Pattern.compile("T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z");
         		Matcher properTickFormat = tickPattern.matcher(tick);
 
         		if (!properTickFormat.matches()) {
