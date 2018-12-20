@@ -190,29 +190,41 @@ public class TriggerListener extends ListenerAdapter {
         	SystemFactionInfluence.purgeEmbed();
         }
 
-        if (msg.toLowerCase().startsWith("mate.setticktime ")) {
+
+        else if (msg.toLowerCase().startsWith("mate.setticktime ")) {
 
         	if (msg.length() > 17) {
 
         		String tick = msg.substring(msg.indexOf(" ")+1).trim();
 
-        		System.out.println(tick);
+        		//System.out.println("'"+tick.toUpperCase()+"'");
 
-        		Pattern tickPattern = Pattern.compile("T\\d{2}:\\d{2}:\\d{2}.\\d{3}Z");
-        		Matcher properTickFormat = tickPattern.matcher(tick);
+        		Pattern tickPattern = Pattern.compile("t\\d{2}:\\d{2}:\\d{2}.\\d{3}z");
+        		Matcher properTickFormat = tickPattern.matcher(tick.toLowerCase());
 
-        		if (!properTickFormat.matches()) {
-    				channel.sendMessage(author.getAsMention() + " ```Incorrect format. Use 24 time format (2-digit hour/minute/second, 3-digit millis). Example - 'T16:30:00.000Z'```").queue();
+        		System.out.println(properTickFormat.matches());
+
+        		if (properTickFormat.matches()) {
+        			DateCompare.setTick(tick.toUpperCase());
+        			channel.sendMessage(author.getAsMention() + String.format(" ```New tick: %s```", DateCompare.getTick())).submit();
+
         		} else {
-        			DateCompare.setTick(tick);
-        			channel.sendMessage(author.getAsMention() + String.format(" ```New tick: %s```", DateCompare.getTick())).queue();
+        			channel.sendMessage(author.getAsMention() + " ```Incorrect format. Use 24 time format (2-digit hour/minute/second, 3-digit millis). Example - 'T16:30:00.000Z'```").submit();
         		}
 
-
         	} else {
-        		channel.sendMessage(author.getAsMention() + " ```Incorrect format. Use 24 time format (2-digit hour/minute/second, 3-digit millis). Example - 'T16:30:00.000Z'```").queue();
+        		channel.sendMessage(author.getAsMention() + " ```Incorrect format. Use 'mate.setTickTime T16:30:00.000Z'```").submit();
         	}
-        	SystemFactionInfluence.purgeEmbed();
+//        	SystemFactionInfluence.purgeEmbed();
+        }
+
+
+        else if (msg.toLowerCase().equals("mate.currentticktime")) {
+
+        	System.out.println("Getting current tick...");
+        	channel.sendMessage(author.getAsMention() + String.format(" ```Current tick: %s```", DateCompare.getTick())).submit();
+//        	SystemFactionInfluence.purgeEmbed();
+
         }
 
 
@@ -332,4 +344,6 @@ public class TriggerListener extends ListenerAdapter {
 //            }
 //        }
     }
+
+
 }
